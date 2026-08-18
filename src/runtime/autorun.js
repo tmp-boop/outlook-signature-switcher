@@ -1,5 +1,10 @@
 // Køres automatisk af Outlook (event-based activation).
-// Sætter intern eller ekstern signatur ud fra modtagernes mail-domæne.
+// Henter en fælles, centralt hostet skabelon og udfylder den med brugerens
+// egne oplysninger, og sætter intern eller ekstern signatur ud fra
+// modtagernes mail-domæne.
+
+// Ret denne hvis I flytter hosting et andet sted hen.
+const HOST_BASE = "https://tmp-boop.github.io/outlook-signature-switcher";
 
 Office.onReady();
 
@@ -13,21 +18,19 @@ function runAndComplete(event) {
 }
 
 async function applySignature() {
-  const settings = await getSettings();
-  if (!settings.internalSignature && !settings.externalSignature) {
-    // Intet konfigureret endnu i indstillingerne – rør ikke ved mailen.
-    return;
-  }
-
   const ownDomain = getOwnDomain();
   const recipients = await getAllRecipients();
   const isInternal =
     recipients.length === 0 || recipients.every((address) => domainOf(address) === ownDomain);
 
-  const html = isInternal ? settings.internalSignature : settings.externalSignature;
-  if (!html) return;
+  const templateName = isInternal ? "internal" : "external";
+  const [template, personalInfo] = await Promise.all([
+    getTemplate(templateName),
+    getPersonalInfo(),
+  ]);
+  if (!template) return; // hverken netværk eller cache virkede - rør ikke ved mailen
 
-  await setSignature(html);
+  await setSignature(fillTemplate(template, personalInfo));
 }
 
 function getOwnDomain() {
@@ -61,11 +64,43 @@ function getRecipientsAsync(field) {
   });
 }
 
-function getSettings() {
-  return Promise.resolve({
-    internalSignature: Office.context.roamingSettings.get("internalSignature") || "",
-    externalSignature: Office.context.roamingSettings.get("externalSignature") || "",
-  });
+// Brugerens egne felter: navn kommer gratis fra Outlook, telefon/titel
+// indtastes én gang i taskpane'et og gemmes på brugerens egen postkasse.
+function getPersonalInfo() {
+  const savedName = Office.context.roamingSettings.get("userName");
+  return {
+    navn: savedName || Office.context.mailbox.userProfile.displayName || "",
+    titel: Office.context.roamingSettings.get("userTitle") || "",
+    telefon: Office.context.roamingSettings.get("userPhone") || "",
+    email: Office.context.mailbox.userProfile.emailAddress || "",
+  };
+}
+
+// Henter den fælles skabelon fra hosting. Gemmer en kopi i roamingSettings,
+// så signaturen stadig kan sættes, selv hvis hentningen fejler (fx offline).
+async function getTemplate(name) {
+  const cacheKey = "templateCache_" + name;
+  try {
+    const response = await fetch(`${HOST_BASE}/templates/${name}.html?t=${Date.now()}`);
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    const html = await response.text();
+    Office.context.roamingSettings.set(cacheKey, html);
+    Office.context.roamingSettings.saveAsync(() => {});
+    return html;
+  } catch (err) {
+    console.error("Kunne ikke hente skabelon, bruger cache:", err);
+    return Office.context.roamingSettings.get(cacheKey) || "";
+  }
+}
+
+function fillTemplate(html, values) {
+  return html.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key) =>
+    values[key] !== undefined ? escapeHtml(values[key]) : match
+  );
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function setSignature(html) {

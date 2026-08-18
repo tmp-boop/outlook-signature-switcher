@@ -13,17 +13,37 @@ og Outlook på Mac — kræver en Microsoft 365 / Exchange Online-postkasse.
   - åbner en ny mail (`OnNewMessageCompose`)
   - ændrer modtagere, fx ved svar/videresend eller når du tilføjer/fjerner
     nogen i Til/Cc/Bcc (`OnMessageRecipientsChanged`)
+- [templates/internal.html](templates/internal.html) og
+  [templates/external.html](templates/external.html) er de **fælles
+  skabeloner** — samme layout/logo/disclaimer for alle i virksomheden. De
+  hostes sammen med resten af filerne og hentes live af alle brugeres
+  tilføjelsesprogram, hver gang signaturen skal sættes. Skal branding
+  ændres for alle, redigerer du bare disse to filer og pusher — ingen grund
+  til at sideloade igen.
+- Skabelonerne bruger pladsholdere: `{{navn}}`, `{{titel}}`, `{{telefon}}`,
+  `{{email}}`.
 - [src/runtime/autorun.js](src/runtime/autorun.js) sammenligner modtagernes
-  domæner med dit eget (`Office.context.mailbox.userProfile.emailAddress`) og
-  sætter signaturen med `item.body.setSignatureAsync(...)`.
+  domæner med dit eget (`Office.context.mailbox.userProfile.emailAddress`),
+  henter den rigtige skabelon, udfylder pladsholderne med brugerens egne
+  oplysninger, og sætter signaturen med `item.body.setSignatureAsync(...)`.
 - [src/taskpane/taskpane.html](src/taskpane/taskpane.html) er indstillingsruden,
-  hvor du indtaster de to signaturer. De gemmes på din postkasse via
-  `Office.context.roamingSettings`, så de følger med dig mellem enheder.
+  hvor hver bruger kun udfylder **titel og telefon** (navn hentes automatisk
+  fra Outlook). Det gemmes på den enkeltes postkasse via
+  `Office.context.roamingSettings` — ingen andre kan se eller ændre det.
 
 Reglen for "intern" ligger i `applySignature()` i
 [autorun.js](src/runtime/autorun.js): en mail er intern, hvis den har mindst
 én modtager, og *alle* modtagere har samme domæne som din egen adresse. En
 tom modtagerliste (helt ny, blank mail) tæller som intern som udgangspunkt.
+
+### Om navn/titel/telefon — hvorfor ikke hente det fra AD?
+
+Navn kommer gratis fra Outlook (`userProfile.displayName`). Titel og telefon
+findes derimod ikke i Office.js og kræver et Microsoft Graph-opslag mod jeres
+Entra ID, hvilket kræver en admin-godkendt app-registrering **og** at felterne
+faktisk står udfyldt i AD. Det er ikke sat op her — hver bruger indtaster
+derfor selv titel/telefon én gang. Har I senere admin-adgang og pænt udfyldte
+AD-profiler, kan det tilføjes som en udvidelse.
 
 ## 1. Host filerne (kræves — Outlook henter dem via HTTPS)
 
@@ -82,14 +102,13 @@ Hvis din organisation bruger Microsoft 365, kan en administrator i stedet
 udrulle den centralt til alle via **Microsoft 365 admin center →
 Integrerede apps**, så du (og evt. kolleger) slipper for at sideloade manuelt.
 
-## 3. Konfigurér dine signaturer
+## 3. Udfyld dine oplysninger
 
 1. Opret en ny mail i Outlook.
 2. Klik **Signatur-indstillinger** i båndet.
-3. Skriv/indsæt din interne signatur i det ene felt og din eksterne i det
-   andet (du kan kopiere en eksisterende signatur med logo og formatering
-   direkte ind).
-4. Klik **Gem indstillinger**.
+3. Navn er allerede udfyldt. Skriv din titel (valgfrit) og telefonnummer.
+4. Se forhåndsvisningen af begge signaturer nederst i ruden.
+5. Klik **Gem mine oplysninger**.
 
 Fra nu af skifter signaturen automatisk, når du ændrer modtagere. Knappen
 **Anvend på denne mail nu** kan bruges til at teste eller til manuelt at
@@ -102,13 +121,20 @@ den ikke konkurrerer med denne add-in.
 ## Begrænsninger
 
 - Kræver Microsoft 365/Exchange Online — virker ikke med rene POP/IMAP-konti.
+- Skabelonerne hentes over internettet hver gang signaturen sættes. Er
+  brugeren offline, bruges en cachet kopi fra sidste succesfulde hentning
+  (gemt i `roamingSettings`) — indtil da virker automatisk skift ikke.
+- Ændringer i `templates/*.html` slår typisk igennem inden for et par
+  minutter (GitHub Pages' CDN), ikke øjeblikkeligt.
 - `roamingSettings` har en størrelsesgrænse (få hundrede KB) — hold billeder i
-  signaturen små, eller link til dem i stedet for at indsætte dem som base64.
+  skabelonerne små, eller link til dem i stedet for at indsætte dem som base64.
 - I klassisk Outlook (Windows) kan `OnMessageRecipientsChanged` udløses igen
   ved svar, selv uden ændringer — helt ufarligt, den sætter blot samme
   signatur igen.
 - Vil du regne flere domæner som "interne" (fx søsterselskaber), tilføj en
   liste og tjek mod den i stedet for kun `getOwnDomain()` i `autorun.js`.
+- Titel/telefon kommer ikke fra AD/Entra ID (se afsnittet ovenfor) — hver
+  bruger indtaster det selv én gang.
 
 ## Ikoner
 

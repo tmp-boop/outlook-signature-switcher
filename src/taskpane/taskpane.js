@@ -1,28 +1,50 @@
+let rawTemplates = { internal: "", external: "" };
+
 Office.onReady(() => {
   document.getElementById("ownDomain").textContent = getOwnDomain() || "(ukendt)";
+  document.getElementById("userEmail").value = Office.context.mailbox.userProfile.emailAddress || "";
 
-  getSettings().then((settings) => {
-    document.getElementById("internalEditor").innerHTML = settings.internalSignature || "";
-    document.getElementById("externalEditor").innerHTML = settings.externalSignature || "";
-  });
-
-  document.querySelectorAll(".toolbar button").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.getElementById(btn.closest(".toolbar").dataset.target).focus();
-      document.execCommand(btn.dataset.cmd, false, null);
-    });
-  });
+  document.getElementById("userName").value =
+    Office.context.roamingSettings.get("userName") || Office.context.mailbox.userProfile.displayName || "";
+  document.getElementById("userTitle").value = Office.context.roamingSettings.get("userTitle") || "";
+  document.getElementById("userPhone").value = Office.context.roamingSettings.get("userPhone") || "";
 
   document.getElementById("saveBtn").addEventListener("click", onSave);
   document.getElementById("applyNowBtn").addEventListener("click", onApplyNow);
+  ["userName", "userTitle", "userPhone"].forEach((id) =>
+    document.getElementById(id).addEventListener("input", renderPreviews)
+  );
+
+  loadTemplatesAndPreview();
 });
 
-function onSave() {
-  const internalSignature = document.getElementById("internalEditor").innerHTML;
-  const externalSignature = document.getElementById("externalEditor").innerHTML;
+async function loadTemplatesAndPreview() {
+  const [internal, external] = await Promise.all([getTemplate("internal"), getTemplate("external")]);
+  rawTemplates = { internal, external };
+  renderPreviews();
+}
 
-  Office.context.roamingSettings.set("internalSignature", internalSignature);
-  Office.context.roamingSettings.set("externalSignature", externalSignature);
+function renderPreviews() {
+  const info = currentPersonalInfo();
+  document.getElementById("internalPreview").innerHTML =
+    fillTemplate(rawTemplates.internal, info) || "<em>Kunne ikke hente skabelon.</em>";
+  document.getElementById("externalPreview").innerHTML =
+    fillTemplate(rawTemplates.external, info) || "<em>Kunne ikke hente skabelon.</em>";
+}
+
+function currentPersonalInfo() {
+  return {
+    navn: document.getElementById("userName").value,
+    titel: document.getElementById("userTitle").value,
+    telefon: document.getElementById("userPhone").value,
+    email: Office.context.mailbox.userProfile.emailAddress || "",
+  };
+}
+
+function onSave() {
+  Office.context.roamingSettings.set("userName", document.getElementById("userName").value);
+  Office.context.roamingSettings.set("userTitle", document.getElementById("userTitle").value);
+  Office.context.roamingSettings.set("userPhone", document.getElementById("userPhone").value);
   Office.context.roamingSettings.saveAsync((asyncResult) => {
     if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
       showStatus("Gemt. Signaturen skifter automatisk fra næste nye mail.", "ok");

@@ -12,43 +12,40 @@
   <h1>Signatur-skifter</h1>
   <div class="info">
     Dit domæne: <strong id="ownDomain">…</strong><br />
-    Mails hvor <em>alle</em> modtagere er på dette domæne bruger den interne signatur.
-    Alt andet bruger den eksterne.
+    Mails hvor <em>alle</em> modtagere er på dette domæne bruger den interne skabelon.
+    Alt andet bruger den eksterne. Layoutet på begge skabeloner er fælles for alle
+    og redigeres centralt af den, der administrerer tilføjelsesprogrammet.
   </div>
 
   <fieldset>
-    <legend>Intern signatur</legend>
-    <div class="toolbar" data-target="internalEditor">
-      <button type="button" data-cmd="bold"><b>B</b></button>
-      <button type="button" data-cmd="italic"><i>I</i></button>
-      <button type="button" data-cmd="underline"><u>U</u></button>
-      <button type="button" data-cmd="removeFormat">✕</button>
-    </div>
-    <div id="internalEditor" class="editor" contenteditable="true"></div>
-  </fieldset>
+    <legend>Dine oplysninger</legend>
+    <label for="userName">Navn</label>
+    <input type="text" id="userName" />
 
-  <fieldset>
-    <legend>Ekstern signatur</legend>
-    <div class="toolbar" data-target="externalEditor">
-      <button type="button" data-cmd="bold"><b>B</b></button>
-      <button type="button" data-cmd="italic"><i>I</i></button>
-      <button type="button" data-cmd="underline"><u>U</u></button>
-      <button type="button" data-cmd="removeFormat">✕</button>
-    </div>
-    <div id="externalEditor" class="editor" contenteditable="true"></div>
-  </fieldset>
+    <label for="userTitle">Titel (valgfrit)</label>
+    <input type="text" id="userTitle" placeholder="fx Projektleder" />
 
-  <p class="hint">
-    Tip: Du kan kopiere din nuværende signatur (med logo og formatering) fra Outlooks
-    signatur-indstillinger og indsætte den direkte i felterne ovenfor.
-  </p>
+    <label for="userPhone">Telefon</label>
+    <input type="tel" id="userPhone" placeholder="fx +45 12 34 56 78" />
+
+    <label>E-mail (hentes automatisk)</label>
+    <input type="text" id="userEmail" disabled />
+  </fieldset>
 
   <div class="actions">
-    <button class="primary" id="saveBtn">Gem indstillinger</button>
+    <button class="primary" id="saveBtn">Gem mine oplysninger</button>
     <button class="secondary" id="applyNowBtn">Anvend på denne mail nu</button>
   </div>
 
   <div id="status"></div>
+
+  <fieldset>
+    <legend>Sådan ser dine signaturer ud</legend>
+    <div class="previewLabel">Intern</div>
+    <div id="internalPreview" class="preview"></div>
+    <div class="previewLabel">Ekstern</div>
+    <div id="externalPreview" class="preview"></div>
+  </fieldset>
 
   <script type="text/javascript" src="taskpane.js"></script>
 </body>
