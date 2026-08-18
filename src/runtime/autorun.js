@@ -62,13 +62,9 @@ function getRecipientsAsync(field) {
 }
 
 function getSettings() {
-  return new Promise((resolve) => {
-    Office.context.roamingSettings.refreshAsync(() => {
-      resolve({
-        internalSignature: Office.context.roamingSettings.get("internalSignature") || "",
-        externalSignature: Office.context.roamingSettings.get("externalSignature") || "",
-      });
-    });
+  return Promise.resolve({
+    internalSignature: Office.context.roamingSettings.get("internalSignature") || "",
+    externalSignature: Office.context.roamingSettings.get("externalSignature") || "",
   });
 }
 
