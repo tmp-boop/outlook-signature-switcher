@@ -4,7 +4,7 @@
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="MailApp">
   <Id>9f3c4a2e-6b7a-4a3d-9e21-8f5c2d1a7b40</Id>
-  <Version>1.0.1</Version>
+  <Version>1.0.2</Version>
   <ProviderName>Celectas</ProviderName>
   <DefaultLocale>da-dk</DefaultLocale>
   <DisplayName DefaultValue="Signatur-skifter"/>
@@ -29,7 +29,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/taskpane/taskpane.html"/>
+        <SourceLocation DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/taskpane/taskpane.html?v=3"/>
         <RequestedHeight>450</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -104,9 +104,9 @@
           <bt:Image id="Icon80x80" DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/assets/icon-80.png"></bt:Image>
         </bt:Images>
         <bt:Urls>
-          <bt:Url id="residUrl0" DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/taskpane/taskpane.html"></bt:Url>
-          <bt:Url id="Autorun" DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/runtime/autorun.html?v=2"></bt:Url>
-          <bt:Url id="runtimeJs" DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/runtime/autorun.js?v=2"></bt:Url>
+          <bt:Url id="residUrl0" DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/taskpane/taskpane.html?v=3"></bt:Url>
+          <bt:Url id="Autorun" DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/runtime/autorun.html?v=3"></bt:Url>
+          <bt:Url id="runtimeJs" DefaultValue="https://tmp-boop.github.io/outlook-signature-switcher/src/runtime/autorun.js?v=3"></bt:Url>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="residGL0" DefaultValue="Signatur-skifter"></bt:String>

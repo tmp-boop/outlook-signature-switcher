@@ -71,15 +71,23 @@ kan åbnes i en browser.
 > firmaets egen webserver osv.) — det er kun URL'erne i `manifest.xml`, der
 > skal pege det rigtige sted hen.
 
-> **Vigtigt ved fremtidige rettelser i `src/runtime/autorun.js` eller
-> `autorun.html`:** Outlooks baggrundsproces for automatisk aktivering
-> cacher disse filer og genindlæser dem typisk kun, når `<Version>` i
-> `manifest.xml` ændrer sig. Bump derfor `<Version>` (fx `1.0.1` →
-> `1.0.2`) **og** `?v=` -tallet i `bt:Url id="Autorun"` /
-> `bt:Url id="runtimeJs"`, hver gang en af de to filer rettes — ellers kan
-> ændringer se ud til slet ikke at virke, selv efter push. Taskpane'et
-> (`taskpane.html`) er ikke ramt af dette, da det genindlæses hver gang du
-> åbner indstillingsruden.
+> **Vigtigt ved enhver fremtidig rettelse i koden:** Både Outlooks
+> baggrundsproces (runtime) og selve browseren/webview'et, der viser
+> taskpane'et, cacher filerne aggressivt — HTML, JS og CSS. Der er to
+> uafhængige cache-lag at holde styr på:
+>
+> 1. **Manifest-niveau:** bump `<Version>` i `manifest.xml` (fx `1.0.2` →
+>    `1.0.3`) og `?v=`-tallet på `bt:Url id="Autorun"` /
+>    `bt:Url id="runtimeJs"` / `bt:Url id="residUrl0"`.
+> 2. **Fil-niveau:** bump samme `?v=`-tal på de `<script src="...">` og
+>    `<link href="...">`, som filerne selv indeholder (i `taskpane.html`
+>    og `autorun.html`) — de er en helt separat cache fra manifestet.
+>
+> Brug ét fælles `?v=`-tal og bump det alle steder på én gang, hver gang du
+> ændrer `autorun.js`, `autorun.html`, `taskpane.html`, `taskpane.js` eller
+> `taskpane.css`. Spring et sted over, og du risikerer at nogle brugere (eller
+> dele af funktionaliteten) fortsætter med gammel kode i lang tid efter en
+> rettelse, selv efter at have fjernet og gentilføjet add-in'et.
 
 ## 2. Sideload add-in'et i Outlook
 
