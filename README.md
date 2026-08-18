@@ -71,6 +71,16 @@ kan åbnes i en browser.
 > firmaets egen webserver osv.) — det er kun URL'erne i `manifest.xml`, der
 > skal pege det rigtige sted hen.
 
+> **Vigtigt ved fremtidige rettelser i `src/runtime/autorun.js` eller
+> `autorun.html`:** Outlooks baggrundsproces for automatisk aktivering
+> cacher disse filer og genindlæser dem typisk kun, når `<Version>` i
+> `manifest.xml` ændrer sig. Bump derfor `<Version>` (fx `1.0.1` →
+> `1.0.2`) **og** `?v=` -tallet i `bt:Url id="Autorun"` /
+> `bt:Url id="runtimeJs"`, hver gang en af de to filer rettes — ellers kan
+> ændringer se ud til slet ikke at virke, selv efter push. Taskpane'et
+> (`taskpane.html`) er ikke ramt af dette, da det genindlæses hver gang du
+> åbner indstillingsruden.
+
 ## 2. Sideload add-in'et i Outlook
 
 **Nyt Outlook / Outlook på nettet:**
