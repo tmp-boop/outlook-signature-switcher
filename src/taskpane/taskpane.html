@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <title>Signatur-skifter</title>
+  <link rel="stylesheet" href="taskpane.css" />
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../runtime/autorun.js"></script>
+</head>
+<body>
+  <h1>Signatur-skifter</h1>
+  <div class="info">
+    Dit domæne: <strong id="ownDomain">…</strong><br />
+    Mails hvor <em>alle</em> modtagere er på dette domæne bruger den interne signatur.
+    Alt andet bruger den eksterne.
+  </div>
+
+  <fieldset>
+    <legend>Intern signatur</legend>
+    <div class="toolbar" data-target="internalEditor">
+      <button type="button" data-cmd="bold"><b>B</b></button>
+      <button type="button" data-cmd="italic"><i>I</i></button>
+      <button type="button" data-cmd="underline"><u>U</u></button>
+      <button type="button" data-cmd="removeFormat">✕</button>
+    </div>
+    <div id="internalEditor" class="editor" contenteditable="true"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Ekstern signatur</legend>
+    <div class="toolbar" data-target="externalEditor">
+      <button type="button" data-cmd="bold"><b>B</b></button>
+      <button type="button" data-cmd="italic"><i>I</i></button>
+      <button type="button" data-cmd="underline"><u>U</u></button>
+      <button type="button" data-cmd="removeFormat">✕</button>
+    </div>
+    <div id="externalEditor" class="editor" contenteditable="true"></div>
+  </fieldset>
+
+  <p class="hint">
+    Tip: Du kan kopiere din nuværende signatur (med logo og formatering) fra Outlooks
+    signatur-indstillinger og indsætte den direkte i felterne ovenfor.
+  </p>
+
+  <div class="actions">
+    <button class="primary" id="saveBtn">Gem indstillinger</button>
+    <button class="secondary" id="applyNowBtn">Anvend på denne mail nu</button>
+  </div>
+
+  <div id="status"></div>
+
+  <script type="text/javascript" src="taskpane.js"></script>
+</body>
+</html>
