@@ -69,56 +69,6 @@ legend {
   color: var(--fg);
 }
 
-label {
-  display: block;
-  font-weight: 600;
-  margin: 8px 0 3px 0;
-  color: var(--fg);
-}
-
-input[type="text"],
-input[type="tel"],
-input[type="password"] {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 6px 8px;
-  font-size: 13px;
-  background: var(--input-bg);
-  color: var(--fg);
-}
-
-input[type="password"] {
-  font-family: monospace;
-}
-
-input[type="text"]:focus,
-input[type="tel"]:focus,
-input[type="password"]:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-input:disabled {
-  background: var(--info-bg);
-  color: var(--hint-fg);
-}
-
-.previewLabel {
-  font-weight: 600;
-  color: var(--muted-fg);
-  margin: 10px 0 4px 0;
-}
-
-.preview {
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 8px;
-  background: var(--input-bg);
-  color: var(--fg);
-}
-
 .toolbar {
   display: flex;
   gap: 4px;
@@ -140,7 +90,7 @@ input:disabled {
 }
 
 .editor {
-  min-height: 90px;
+  min-height: 110px;
   border: 1px solid var(--border);
   border-radius: 3px;
   padding: 8px;
@@ -152,22 +102,6 @@ input:disabled {
 
 .editor:focus {
   border-color: var(--accent);
-}
-
-.editor.wysiwyg {
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-size: 13px;
-}
-
-details {
-  color: var(--fg);
-}
-
-details > summary {
-  cursor: pointer;
-  font-weight: 600;
-  padding: 4px 0;
-  color: var(--fg) !important;
 }
 
 .hint {
@@ -206,18 +140,15 @@ button.secondary {
   cursor: pointer;
 }
 
-#status,
-#templateStatus {
+#status {
   margin-top: 10px;
   font-weight: 600;
 }
 
-#status.ok,
-#templateStatus.ok {
+#status.ok {
   color: var(--ok);
 }
 
-#status.error,
-#templateStatus.error {
+#status.error {
   color: var(--error);
 }

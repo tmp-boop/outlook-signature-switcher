@@ -12,82 +12,44 @@
   <h1>Signatur-skifter</h1>
   <div class="info">
     Dit domæne: <strong id="ownDomain">…</strong><br />
-    Mails hvor <em>alle</em> modtagere er på dette domæne bruger den interne skabelon.
-    Alt andet bruger den eksterne. Layoutet på begge skabeloner er fælles for alle
-    og redigeres centralt af den, der administrerer tilføjelsesprogrammet.
+    Mails hvor <em>alle</em> modtagere er på dette domæne bruger din interne
+    signatur. Alt andet bruger den eksterne. Begge signaturer er kun dine
+    egne og gemmes kun på din egen postkasse.
   </div>
 
   <fieldset>
-    <legend>Dine oplysninger</legend>
-    <label for="userName">Navn</label>
-    <input type="text" id="userName" />
-
-    <label for="userTitle">Titel (valgfrit)</label>
-    <input type="text" id="userTitle" placeholder="fx Projektleder" />
-
-    <label for="userPhone">Telefon</label>
-    <input type="tel" id="userPhone" placeholder="fx +45 12 34 56 78" />
-
-    <label>E-mail (hentes automatisk)</label>
-    <input type="text" id="userEmail" disabled />
+    <legend>Intern signatur</legend>
+    <div class="toolbar" data-target="internalEditor">
+      <button type="button" data-cmd="bold"><b>B</b></button>
+      <button type="button" data-cmd="italic"><i>I</i></button>
+      <button type="button" data-cmd="underline"><u>U</u></button>
+      <button type="button" data-cmd="removeFormat">✕</button>
+    </div>
+    <div id="internalEditor" class="editor" contenteditable="true"></div>
   </fieldset>
 
+  <fieldset>
+    <legend>Ekstern signatur</legend>
+    <div class="toolbar" data-target="externalEditor">
+      <button type="button" data-cmd="bold"><b>B</b></button>
+      <button type="button" data-cmd="italic"><i>I</i></button>
+      <button type="button" data-cmd="underline"><u>U</u></button>
+      <button type="button" data-cmd="removeFormat">✕</button>
+    </div>
+    <div id="externalEditor" class="editor" contenteditable="true"></div>
+  </fieldset>
+
+  <p class="hint">
+    Tip: Du kan kopiere din nuværende signatur (med logo og formatering) fra
+    Outlooks egne signatur-indstillinger og indsætte den direkte i felterne.
+  </p>
+
   <div class="actions">
-    <button class="primary" id="saveBtn">Gem mine oplysninger</button>
+    <button class="primary" id="saveBtn">Gem indstillinger</button>
     <button class="secondary" id="applyNowBtn">Anvend på denne mail nu</button>
   </div>
 
   <div id="status"></div>
-
-  <fieldset>
-    <legend>Sådan ser dine signaturer ud</legend>
-    <div class="previewLabel">Intern</div>
-    <div id="internalPreview" class="preview"></div>
-    <div class="previewLabel">Ekstern</div>
-    <div id="externalPreview" class="preview"></div>
-  </fieldset>
-
-  <details>
-    <summary>Rediger fælles skabelon (kun administrator)</summary>
-    <fieldset>
-      <p class="hint">
-        Skabelonen bruges af <em>alle</em> kolleger. Rediger den herunder som den
-        rent faktisk kommer til at se ud. Pladsholdere som <code>{{navn}}</code>,
-        <code>{{titel}}</code>, <code>{{telefon}}</code>, <code>{{email}}</code>
-        skal stå som almindelig tekst — de udfyldes automatisk pr. bruger.
-        Ændringer gemmes direkte fra Outlook — ingen filer, ingen git.
-      </p>
-
-      <label for="githubToken">GitHub-token (kun brugt til denne gemning, gemmes ikke)</label>
-      <input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_..." />
-
-      <label for="internalTemplateEditor">Intern skabelon</label>
-      <div class="toolbar" data-target="internalTemplateEditor">
-        <button type="button" data-cmd="bold"><b>B</b></button>
-        <button type="button" data-cmd="italic"><i>I</i></button>
-        <button type="button" data-cmd="underline"><u>U</u></button>
-        <button type="button" data-cmd="removeFormat">✕</button>
-      </div>
-      <div id="internalTemplateEditor" class="editor wysiwyg" contenteditable="true"></div>
-      <div class="actions">
-        <button class="secondary" id="saveInternalTemplateBtn">Gem intern skabelon</button>
-      </div>
-
-      <label for="externalTemplateEditor">Ekstern skabelon</label>
-      <div class="toolbar" data-target="externalTemplateEditor">
-        <button type="button" data-cmd="bold"><b>B</b></button>
-        <button type="button" data-cmd="italic"><i>I</i></button>
-        <button type="button" data-cmd="underline"><u>U</u></button>
-        <button type="button" data-cmd="removeFormat">✕</button>
-      </div>
-      <div id="externalTemplateEditor" class="editor wysiwyg" contenteditable="true"></div>
-      <div class="actions">
-        <button class="secondary" id="saveExternalTemplateBtn">Gem ekstern skabelon</button>
-      </div>
-
-      <div id="templateStatus"></div>
-    </fieldset>
-  </details>
 
   <script type="text/javascript" src="taskpane.js"></script>
 </body>
