@@ -119,7 +119,17 @@ async function onSaveTemplate(name) {
 
     rawTemplates[name] = newContent;
     renderPreviews();
-    showTemplateStatus("Gemt. Alle kolleger får den nye skabelon inden for et par minutter.", "ok");
+
+    // Opdater også den lokale reserve-kopi på denne enhed, så vi ikke selv
+    // ender med at bruge en forældet cache, hvis det efterfølgende live-hentet
+    // (fx i klassisk Outlook, hvor det er kendt at kunne fejle - se README).
+    Office.context.roamingSettings.set("templateCache_" + name, newContent);
+    Office.context.roamingSettings.saveAsync(() => {});
+
+    showTemplateStatus(
+      "Gemt. Kolleger får den nye skabelon, næste gang de åbner Signatur-indstillinger.",
+      "ok"
+    );
   } catch (err) {
     showTemplateStatus("Kunne ikke gemme skabelon: " + err.message, "error");
   } finally {

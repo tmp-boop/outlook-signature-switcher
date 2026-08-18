@@ -57,6 +57,16 @@ tom modtagerliste (helt ny, blank mail) tæller som intern som udgangspunkt.
 6. Ændringen ligger på GitHub Pages inden for et par minutter, uden at
    nogen har rørt en fil eller kørt en git-kommando.
 
+**Hvornår ser kolleger ændringen?** I nyt Outlook, Outlook på nettet og Mac
+hentes skabelonen live, så det slår igennem næsten med det samme (når
+GitHub Pages har opdateret sig). I **klassisk Outlook (Windows)** er den
+automatiske baggrundsproces, der sætter signaturen, kendt for at have et
+upålideligt netværkslag (en dokumenteret Microsoft-begrænsning, ikke noget
+i denne kode) — der bruges derfor en lokal reserve-kopi, som kun opdateres,
+når man selv åbner **Signatur-indstillinger**. Bed derfor kolleger om at
+åbne indstillingsruden én gang efter en skabelon-ændring, hvis de bruger
+klassisk Outlook.
+
 **Om tokenet:** det er reelt sådan adgangsstyringen fungerer her — kun den,
 der har (eller får) et token med skriveadgang til repoet, kan ændre
 skabelonen. Del det ikke, og lav et nyt/roter det via GitHub, hvis du er i
@@ -148,8 +158,10 @@ den ikke konkurrerer med denne add-in.
 
 - Kræver Microsoft 365/Exchange Online — virker ikke med rene POP/IMAP-konti.
 - Skabelonerne hentes over internettet hver gang signaturen sættes. Er
-  brugeren offline, bruges en cachet kopi fra sidste succesfulde hentning
-  (gemt i `roamingSettings`) — indtil da virker automatisk skift ikke.
+  brugeren offline — eller i klassisk Outlook (Windows), hvor den slags
+  netværkskald i baggrunden er kendt for at fejle (se afsnittet om admin-
+  redigering ovenfor) — bruges en cachet kopi fra sidste succesfulde
+  hentning (gemt i `roamingSettings`) i stedet.
 - Ændringer i `templates/*.html` slår typisk igennem inden for et par
   minutter (GitHub Pages' CDN), ikke øjeblikkeligt.
 - `roamingSettings` har en størrelsesgrænse (få hundrede KB) — hold billeder i
