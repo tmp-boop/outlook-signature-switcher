@@ -22,6 +22,12 @@ Office.onReady(() => {
 
   document.getElementById("saveInternalTemplateBtn").addEventListener("click", () => onSaveTemplate("internal"));
   document.getElementById("saveExternalTemplateBtn").addEventListener("click", () => onSaveTemplate("external"));
+  document.querySelectorAll(".toolbar button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.getElementById(btn.closest(".toolbar").dataset.target).focus();
+      document.execCommand(btn.dataset.cmd, false, null);
+    });
+  });
 
   loadTemplatesAndPreview();
 });
@@ -29,8 +35,8 @@ Office.onReady(() => {
 async function loadTemplatesAndPreview() {
   const [internal, external] = await Promise.all([getTemplate("internal"), getTemplate("external")]);
   rawTemplates = { internal, external };
-  document.getElementById("internalTemplateEditor").value = internal;
-  document.getElementById("externalTemplateEditor").value = external;
+  document.getElementById("internalTemplateEditor").innerHTML = internal;
+  document.getElementById("externalTemplateEditor").innerHTML = external;
   renderPreviews();
 }
 
@@ -83,7 +89,7 @@ function showStatus(text, kind) {
 async function onSaveTemplate(name) {
   const token = document.getElementById("githubToken").value.trim();
   const editorId = name === "internal" ? "internalTemplateEditor" : "externalTemplateEditor";
-  const newContent = document.getElementById(editorId).value;
+  const newContent = document.getElementById(editorId).innerHTML;
 
   if (!token) {
     showTemplateStatus("Indsæt et GitHub-token for at kunne gemme.", "error");

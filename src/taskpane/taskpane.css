@@ -119,23 +119,44 @@ input:disabled {
   color: var(--fg);
 }
 
-textarea.htmlEditor {
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 110px;
+.toolbar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.toolbar button {
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--fg);
+  border-radius: 3px;
+  min-width: 28px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: var(--info-bg);
+}
+
+.editor {
+  min-height: 90px;
   border: 1px solid var(--border);
   border-radius: 3px;
   padding: 8px;
   background: var(--input-bg);
   color: var(--fg);
   outline: none;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 12px;
-  resize: vertical;
+  overflow-y: auto;
 }
 
-textarea.htmlEditor:focus {
+.editor:focus {
   border-color: var(--accent);
+}
+
+.editor.wysiwyg {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 13px;
 }
 
 details {

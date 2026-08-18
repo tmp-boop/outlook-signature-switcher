@@ -6,6 +6,13 @@
 // Ret denne hvis I flytter hosting et andet sted hen.
 const HOST_BASE = "https://tmp-boop.github.io/outlook-signature-switcher";
 
+// Skabelonerne hentes fra raw.githubusercontent.com, ikke fra HOST_BASE:
+// GitHub Pages bygger/udruller siden asynkront og kan derfor være flere
+// minutter bagud efter en gemning, mens de rå fil-indhold er tilgængeligt
+// næsten øjeblikkeligt. Det undgår at en forsinket fetch overskriver den
+// lokale cache med en forældet version, lige efter admin har gemt en ændring.
+const TEMPLATE_RAW_BASE = "https://raw.githubusercontent.com/tmp-boop/outlook-signature-switcher/main";
+
 Office.onReady();
 
 Office.actions.associate("onMessageComposeHandler", (event) => runAndComplete(event));
@@ -81,7 +88,7 @@ function getPersonalInfo() {
 async function getTemplate(name) {
   const cacheKey = "templateCache_" + name;
   try {
-    const response = await fetch(`${HOST_BASE}/templates/${name}.html?t=${Date.now()}`);
+    const response = await fetch(`${TEMPLATE_RAW_BASE}/templates/${name}.html?t=${Date.now()}`);
     if (!response.ok) throw new Error("HTTP " + response.status);
     const html = await response.text();
     Office.context.roamingSettings.set(cacheKey, html);

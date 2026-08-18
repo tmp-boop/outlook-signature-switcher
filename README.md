@@ -49,19 +49,24 @@ tom modtagerliste (helt ny, blank mail) tæller som intern som udgangspunkt.
 2. Kopiér tokenet (det vises kun én gang).
 3. I Outlook: åbn en ny mail → **Signatur-indstillinger** → udvid
    **Rediger fælles skabelon (kun administrator)**.
-4. Indsæt tokenet i feltet, ret den rå HTML i det felt (intern/ekstern), du
-   vil ændre, og klik **Gem**.
-5. Tokenet bliver **aldrig gemt** nogen steder (ikke i `roamingSettings`,
-   ikke i koden) — det bruges kun til det ene gem-kald og ryddes fra feltet
-   bagefter. Du skal indsætte det igen næste gang du redigerer.
-6. Ændringen ligger på GitHub Pages inden for et par minutter, uden at
-   nogen har rørt en fil eller kørt en git-kommando.
+4. Indsæt tokenet i feltet, og rediger felterne for intern/ekstern skabelon
+   direkte, som de kommer til at se ud (fed/kursiv/understreget virker som i
+   en normal tekstboks) — ikke som HTML-kode. Pladsholdere som
+   `{{navn}}`/`{{titel}}`/`{{telefon}}`/`{{email}}` skrives bare som
+   almindelig tekst, der hvor de skal stå.
+5. Klik **Gem**. Tokenet bliver **aldrig gemt** nogen steder (ikke i
+   `roamingSettings`, ikke i koden) — det bruges kun til det ene gem-kald og
+   ryddes fra feltet bagefter. Du skal indsætte det igen næste gang du
+   redigerer.
+6. Ændringen henter vi fra `raw.githubusercontent.com` (de rå fil-data i
+   repoet), ikke fra GitHub Pages — det opdaterer sig praktisk taget
+   øjeblikkeligt efter en gemning, i modsætning til Pages, der bygger/udruller
+   siden asynkront og kan være flere minutter bagud.
 
 **Hvornår ser kolleger ændringen?** I nyt Outlook, Outlook på nettet og Mac
-hentes skabelonen live, så det slår igennem næsten med det samme (når
-GitHub Pages har opdateret sig). I **klassisk Outlook (Windows)** er den
-automatiske baggrundsproces, der sætter signaturen, kendt for at have et
-upålideligt netværkslag (en dokumenteret Microsoft-begrænsning, ikke noget
+hentes skabelonen live næsten øjeblikkeligt. I **klassisk Outlook (Windows)**
+er den automatiske baggrundsproces, der sætter signaturen, kendt for at have
+et upålideligt netværkslag (en dokumenteret Microsoft-begrænsning, ikke noget
 i denne kode) — der bruges derfor en lokal reserve-kopi, som kun opdateres,
 når man selv åbner **Signatur-indstillinger**. Bed derfor kolleger om at
 åbne indstillingsruden én gang efter en skabelon-ændring, hvis de bruger
@@ -162,8 +167,9 @@ den ikke konkurrerer med denne add-in.
   netværkskald i baggrunden er kendt for at fejle (se afsnittet om admin-
   redigering ovenfor) — bruges en cachet kopi fra sidste succesfulde
   hentning (gemt i `roamingSettings`) i stedet.
-- Ændringer i `templates/*.html` slår typisk igennem inden for et par
-  minutter (GitHub Pages' CDN), ikke øjeblikkeligt.
+- Ændringer i `templates/*.html` hentes fra `raw.githubusercontent.com` og
+  slår derfor typisk igennem inden for få sekunder, ikke øjeblikkeligt (den
+  har en kort CDN-cache på op til 5 minutter).
 - `roamingSettings` har en størrelsesgrænse (få hundrede KB) — hold billeder i
   skabelonerne små, eller link til dem i stedet for at indsætte dem som base64.
 - I klassisk Outlook (Windows) kan `OnMessageRecipientsChanged` udløses igen

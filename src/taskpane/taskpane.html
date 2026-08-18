@@ -51,23 +51,36 @@
     <summary>Rediger fælles skabelon (kun administrator)</summary>
     <fieldset>
       <p class="hint">
-        Skabelonen bruges af <em>alle</em> kolleger. Rediger den rå HTML herunder
-        (pladsholdere som <code>{{navn}}</code>, <code>{{titel}}</code>,
-        <code>{{telefon}}</code>, <code>{{email}}</code> udfyldes automatisk pr.
-        bruger). Ændringer gemmes direkte fra Outlook — ingen filer, ingen git.
+        Skabelonen bruges af <em>alle</em> kolleger. Rediger den herunder som den
+        rent faktisk kommer til at se ud. Pladsholdere som <code>{{navn}}</code>,
+        <code>{{titel}}</code>, <code>{{telefon}}</code>, <code>{{email}}</code>
+        skal stå som almindelig tekst — de udfyldes automatisk pr. bruger.
+        Ændringer gemmes direkte fra Outlook — ingen filer, ingen git.
       </p>
 
       <label for="githubToken">GitHub-token (kun brugt til denne gemning, gemmes ikke)</label>
       <input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_..." />
 
-      <label for="internalTemplateEditor">Intern skabelon (rå HTML)</label>
-      <textarea id="internalTemplateEditor" class="htmlEditor"></textarea>
+      <label for="internalTemplateEditor">Intern skabelon</label>
+      <div class="toolbar" data-target="internalTemplateEditor">
+        <button type="button" data-cmd="bold"><b>B</b></button>
+        <button type="button" data-cmd="italic"><i>I</i></button>
+        <button type="button" data-cmd="underline"><u>U</u></button>
+        <button type="button" data-cmd="removeFormat">✕</button>
+      </div>
+      <div id="internalTemplateEditor" class="editor wysiwyg" contenteditable="true"></div>
       <div class="actions">
         <button class="secondary" id="saveInternalTemplateBtn">Gem intern skabelon</button>
       </div>
 
-      <label for="externalTemplateEditor">Ekstern skabelon (rå HTML)</label>
-      <textarea id="externalTemplateEditor" class="htmlEditor"></textarea>
+      <label for="externalTemplateEditor">Ekstern skabelon</label>
+      <div class="toolbar" data-target="externalTemplateEditor">
+        <button type="button" data-cmd="bold"><b>B</b></button>
+        <button type="button" data-cmd="italic"><i>I</i></button>
+        <button type="button" data-cmd="underline"><u>U</u></button>
+        <button type="button" data-cmd="removeFormat">✕</button>
+      </div>
+      <div id="externalTemplateEditor" class="editor wysiwyg" contenteditable="true"></div>
       <div class="actions">
         <button class="secondary" id="saveExternalTemplateBtn">Gem ekstern skabelon</button>
       </div>
