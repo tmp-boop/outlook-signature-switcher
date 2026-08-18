@@ -17,9 +17,12 @@ og Outlook på Mac — kræver en Microsoft 365 / Exchange Online-postkasse.
   [templates/external.html](templates/external.html) er de **fælles
   skabeloner** — samme layout/logo/disclaimer for alle i virksomheden. De
   hostes sammen med resten af filerne og hentes live af alle brugeres
-  tilføjelsesprogram, hver gang signaturen skal sættes. Skal branding
-  ændres for alle, redigerer du bare disse to filer og pusher — ingen grund
-  til at sideloade igen.
+  tilføjelsesprogram, hver gang signaturen skal sættes.
+- Skabelonen redigeres **direkte fra Outlook**, ikke ved at redigere filer
+  og køre git-kommandoer: åbn indstillingsruden → **Rediger fælles skabelon
+  (kun administrator)** → ret den rå HTML → **Gem**. Det gemmer direkte til
+  GitHub via deres API (se afsnittet nedenfor) — alle kolleger får ændringen
+  automatisk, uden gensideload.
 - Skabelonerne bruger pladsholdere: `{{navn}}`, `{{titel}}`, `{{telefon}}`,
   `{{email}}`.
 - [src/runtime/autorun.js](src/runtime/autorun.js) sammenligner modtagernes
@@ -35,6 +38,29 @@ Reglen for "intern" ligger i `applySignature()` i
 [autorun.js](src/runtime/autorun.js): en mail er intern, hvis den har mindst
 én modtager, og *alle* modtagere har samme domæne som din egen adresse. En
 tom modtagerliste (helt ny, blank mail) tæller som intern som udgangspunkt.
+
+### Rediger den fælles skabelon fra Outlook (admin)
+
+1. Opret et **fine-grained personal access token** på GitHub: gå til
+   [github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens/new) →
+   **Only select repositories** → vælg `outlook-signature-switcher` →
+   under **Repository permissions** sæt **Contents: Read and write** →
+   **Generate token**.
+2. Kopiér tokenet (det vises kun én gang).
+3. I Outlook: åbn en ny mail → **Signatur-indstillinger** → udvid
+   **Rediger fælles skabelon (kun administrator)**.
+4. Indsæt tokenet i feltet, ret den rå HTML i det felt (intern/ekstern), du
+   vil ændre, og klik **Gem**.
+5. Tokenet bliver **aldrig gemt** nogen steder (ikke i `roamingSettings`,
+   ikke i koden) — det bruges kun til det ene gem-kald og ryddes fra feltet
+   bagefter. Du skal indsætte det igen næste gang du redigerer.
+6. Ændringen ligger på GitHub Pages inden for et par minutter, uden at
+   nogen har rørt en fil eller kørt en git-kommando.
+
+**Om tokenet:** det er reelt sådan adgangsstyringen fungerer her — kun den,
+der har (eller får) et token med skriveadgang til repoet, kan ændre
+skabelonen. Del det ikke, og lav et nyt/roter det via GitHub, hvis du er i
+tvivl om det er kompromitteret.
 
 ### Om navn/titel/telefon — hvorfor ikke hente det fra AD?
 
@@ -135,6 +161,9 @@ den ikke konkurrerer med denne add-in.
   liste og tjek mod den i stedet for kun `getOwnDomain()` i `autorun.js`.
 - Titel/telefon kommer ikke fra AD/Entra ID (se afsnittet ovenfor) — hver
   bruger indtaster det selv én gang.
+- Skabelon-editoren i taskpane'et kræver et GitHub-token med skriveadgang
+  til repoet (se afsnittet ovenfor). Uden et token kan man stadig se/bruge
+  signaturerne, men ikke gemme ændringer i skabelonen fra Outlook.
 
 ## Ikoner
 

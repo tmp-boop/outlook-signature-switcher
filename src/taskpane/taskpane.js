@@ -1,5 +1,10 @@
 let rawTemplates = { internal: "", external: "" };
 
+// Skal matche hosting-adressen i manifest.xml / HOST_BASE i autorun.js.
+const GITHUB_OWNER = "tmp-boop";
+const GITHUB_REPO = "outlook-signature-switcher";
+const GITHUB_BRANCH = "main";
+
 Office.onReady(() => {
   document.getElementById("ownDomain").textContent = getOwnDomain() || "(ukendt)";
   document.getElementById("userEmail").value = Office.context.mailbox.userProfile.emailAddress || "";
@@ -15,12 +20,17 @@ Office.onReady(() => {
     document.getElementById(id).addEventListener("input", renderPreviews)
   );
 
+  document.getElementById("saveInternalTemplateBtn").addEventListener("click", () => onSaveTemplate("internal"));
+  document.getElementById("saveExternalTemplateBtn").addEventListener("click", () => onSaveTemplate("external"));
+
   loadTemplatesAndPreview();
 });
 
 async function loadTemplatesAndPreview() {
   const [internal, external] = await Promise.all([getTemplate("internal"), getTemplate("external")]);
   rawTemplates = { internal, external };
+  document.getElementById("internalTemplateEditor").value = internal;
+  document.getElementById("externalTemplateEditor").value = external;
   renderPreviews();
 }
 
@@ -66,6 +76,66 @@ function onApplyNow() {
 
 function showStatus(text, kind) {
   const el = document.getElementById("status");
+  el.textContent = text;
+  el.className = kind;
+}
+
+async function onSaveTemplate(name) {
+  const token = document.getElementById("githubToken").value.trim();
+  const editorId = name === "internal" ? "internalTemplateEditor" : "externalTemplateEditor";
+  const newContent = document.getElementById(editorId).value;
+
+  if (!token) {
+    showTemplateStatus("Indsæt et GitHub-token for at kunne gemme.", "error");
+    return;
+  }
+
+  const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/templates/${name}.html`;
+  const headers = {
+    Authorization: `token ${token}`,
+    Accept: "application/vnd.github+json",
+  };
+
+  showTemplateStatus("Gemmer …", "ok");
+  try {
+    const current = await fetch(`${apiUrl}?ref=${GITHUB_BRANCH}`, { headers });
+    if (!current.ok) throw new Error(`Kunne ikke læse nuværende fil (HTTP ${current.status})`);
+    const { sha } = await current.json();
+
+    const put = await fetch(apiUrl, {
+      method: "PUT",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: `Opdater ${name}-skabelon via taskpane`,
+        content: toBase64Utf8(newContent),
+        sha,
+        branch: GITHUB_BRANCH,
+      }),
+    });
+    if (!put.ok) {
+      const body = await put.json().catch(() => ({}));
+      throw new Error(body.message || `HTTP ${put.status}`);
+    }
+
+    rawTemplates[name] = newContent;
+    renderPreviews();
+    showTemplateStatus("Gemt. Alle kolleger får den nye skabelon inden for et par minutter.", "ok");
+  } catch (err) {
+    showTemplateStatus("Kunne ikke gemme skabelon: " + err.message, "error");
+  } finally {
+    document.getElementById("githubToken").value = "";
+  }
+}
+
+function toBase64Utf8(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  bytes.forEach((b) => (binary += String.fromCharCode(b)));
+  return btoa(binary);
+}
+
+function showTemplateStatus(text, kind) {
+  const el = document.getElementById("templateStatus");
   el.textContent = text;
   el.className = kind;
 }

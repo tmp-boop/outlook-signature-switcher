@@ -75,6 +75,40 @@ input:disabled {
   background: #fff;
 }
 
+input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-family: monospace;
+}
+
+textarea.htmlEditor {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 110px;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  padding: 8px;
+  background: #fff;
+  outline: none;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  resize: vertical;
+}
+
+textarea.htmlEditor:focus {
+  border-color: #005a9e;
+}
+
+details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
 .hint {
   color: #6b6b6b;
   font-size: 11px;

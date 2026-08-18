@@ -47,6 +47,35 @@
     <div id="externalPreview" class="preview"></div>
   </fieldset>
 
+  <details>
+    <summary>Rediger fælles skabelon (kun administrator)</summary>
+    <fieldset>
+      <p class="hint">
+        Skabelonen bruges af <em>alle</em> kolleger. Rediger den rå HTML herunder
+        (pladsholdere som <code>{{navn}}</code>, <code>{{titel}}</code>,
+        <code>{{telefon}}</code>, <code>{{email}}</code> udfyldes automatisk pr.
+        bruger). Ændringer gemmes direkte fra Outlook — ingen filer, ingen git.
+      </p>
+
+      <label for="githubToken">GitHub-token (kun brugt til denne gemning, gemmes ikke)</label>
+      <input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_..." />
+
+      <label for="internalTemplateEditor">Intern skabelon (rå HTML)</label>
+      <textarea id="internalTemplateEditor" class="htmlEditor"></textarea>
+      <div class="actions">
+        <button class="secondary" id="saveInternalTemplateBtn">Gem intern skabelon</button>
+      </div>
+
+      <label for="externalTemplateEditor">Ekstern skabelon (rå HTML)</label>
+      <textarea id="externalTemplateEditor" class="htmlEditor"></textarea>
+      <div class="actions">
+        <button class="secondary" id="saveExternalTemplateBtn">Gem ekstern skabelon</button>
+      </div>
+
+      <div id="templateStatus"></div>
+    </fieldset>
+  </details>
+
   <script type="text/javascript" src="taskpane.js"></script>
 </body>
 </html>
