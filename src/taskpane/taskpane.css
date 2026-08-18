@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light dark;
   --bg: #ffffff;
   --fg: #242424;
   --muted-fg: #494949;
@@ -137,11 +138,15 @@ textarea.htmlEditor:focus {
   border-color: var(--accent);
 }
 
+details {
+  color: var(--fg);
+}
+
 details > summary {
   cursor: pointer;
   font-weight: 600;
   padding: 4px 0;
-  color: var(--fg);
+  color: var(--fg) !important;
 }
 
 .hint {
